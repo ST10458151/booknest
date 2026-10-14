@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="BookNest — a cosy home for your reading life." />
+    <title>@ViewData["Title"] · BookNest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header"><div class="header-inner">
+        <a class="brand" asp-controller="Books" asp-action="Index"><span class="brand-icon">✺</span> booknest<span class="brand-period">.</span></a>
+        <nav aria-label="Main navigation"><a asp-controller="Books" asp-action="Index">My library</a><a asp-controller="Books" asp-action="Create">Add a book</a></nav>
+        <a class="header-add" asp-controller="Books" asp-action="Create">＋ Add book</a>
+    </div></header>
+    <main class="page">
+        @if (TempData["Success"] is string success)
+        {
+            <div class="alert" role="status">@success</div>
+        }
+        @RenderBody()
+    </main>
+    <footer class="site-footer"><span>booknest <span>✺</span> a little space for big stories</span><span>Made with ☕ and C# · Local-first reading tracker</span></footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

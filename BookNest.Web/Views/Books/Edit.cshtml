@@ -1,0 +1,8 @@
+@model Book
+@{ ViewData["Title"] = "Edit a Book"; }
+<div class="form-shell"><div class="form-intro"><p class="eyebrow">YOUR READING JOURNEY ✦</p><h1>A story still <em>unfolding.</em></h1><p>Update your progress, your rating, or the details of this book.</p></div>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="book-form">
+  <h2>Edit book details <span>✿</span></h2>
+  <partial name="_Form" model="Model" />
+  <div class="form-actions"><a class="button button-outline" asp-action="Index">Cancel</a><button class="button button-dark" type="submit">Save changes ↗</button></div>
+</form></div>

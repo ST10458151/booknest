@@ -1,0 +1,14 @@
+@model Book
+<div asp-validation-summary="ModelOnly" class="validation" role="alert"></div>
+<input type="hidden" asp-for="Id" />
+<div class="form-grid">
+  <div class="field full"><label asp-for="Title"></label><input asp-for="Title" placeholder="e.g. The Midnight Library" /><span asp-validation-for="Title" class="validation"></span></div>
+  <div class="field"><label asp-for="Author"></label><input asp-for="Author" placeholder="Author's name" /><span asp-validation-for="Author" class="validation"></span></div>
+  <div class="field"><label asp-for="Genre"></label><input asp-for="Genre" placeholder="e.g. Fiction" /><span asp-validation-for="Genre" class="validation"></span></div>
+  <div class="field"><label asp-for="Status"></label><select asp-for="Status" asp-items="Html.GetEnumSelectList<ReadingStatus>()"></select><span asp-validation-for="Status" class="validation"></span></div>
+  <div class="field"><label asp-for="Rating"></label><select asp-for="Rating"><option value="">Not rated</option><option value="1">★ 1 star</option><option value="2">★★ 2 stars</option><option value="3">★★★ 3 stars</option><option value="4">★★★★ 4 stars</option><option value="5">★★★★★ 5 stars</option></select><span asp-validation-for="Rating" class="validation"></span></div>
+  <div class="field"><label asp-for="TotalPages"></label><input asp-for="TotalPages" type="number" min="1" placeholder="e.g. 320" /><span asp-validation-for="TotalPages" class="validation"></span></div>
+  <div class="field"><label asp-for="PagesRead"></label><input asp-for="PagesRead" type="number" min="0" /><span asp-validation-for="PagesRead" class="validation"></span></div>
+  <div class="field full"><label asp-for="CoverUrl"></label><input asp-for="CoverUrl" placeholder="https://example.com/book-cover.jpg" /><span class="help">Optional HTTPS image URL. A decorative cover is shown if left empty.</span><span asp-validation-for="CoverUrl" class="validation"></span></div>
+  <div class="field full"><label asp-for="Notes"></label><textarea asp-for="Notes" rows="4" placeholder="Quotes, thoughts, or favourite moments..."></textarea><span asp-validation-for="Notes" class="validation"></span></div>
+</div>

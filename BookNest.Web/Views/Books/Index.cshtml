@@ -1,0 +1,93 @@
+@model LibraryViewModel
+@{
+  ViewData["Title"] = "My Library";
+  string statusText(ReadingStatus s) => s switch
+  {
+    ReadingStatus.WantToRead => "Want to read",
+    ReadingStatus.Reading => "Currently reading",
+    _ => "Finished"
+  };
+}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">A LITTLE SPACE FOR BIG STORIES <span>✷</span></p>
+    <h1>Your next chapter<br/>starts <em>here.</em></h1>
+    <p>Collect your favourite reads, follow your progress and make room for the stories still waiting to be discovered.</p>
+    <a asp-action="Create" class="button button-dark">＋ Add a book to your shelf</a>
+  </div>
+  <div class="hero-illustration" aria-hidden="true">
+    <div class="sunburst">✳</div>
+    <div class="arch"><div class="book b1"></div><div class="book b2"></div><div class="book b3"></div><div class="book b4"></div><div class="book b5"></div><div class="shelf"></div></div>
+    <span class="illustration-note">good stories live here</span>
+  </div>
+</section>
+
+<section class="stats" aria-label="Reading statistics">
+  <article><span class="stat-symbol">✿</span><strong>@Model.Total</strong><p>Books on my shelf</p></article>
+  <article><span class="stat-symbol">◐</span><strong>@Model.Reading</strong><p>Currently reading</p></article>
+  <article><span class="stat-symbol">✦</span><strong>@Model.Finished</strong><p>Finished books</p></article>
+  <article><span class="stat-symbol">♡</span><strong>@Model.WantToRead</strong><p>Waiting to be read</p></article>
+</section>
+
+<section class="library">
+  <div class="section-title">
+    <div><p class="eyebrow">YOUR PERSONAL COLLECTION</p><h2>Between the <em>pages.</em></h2></div>
+    <span class="section-count">@Model.Books.Count book(s) shown</span>
+  </div>
+  <form method="get" asp-action="Index" class="filters">
+    <div class="tabs" role="group" aria-label="Reading status">
+      <a class="@(Model.Status == "all" ? "active" : "")" asp-action="Index" asp-route-query="@Model.Query" asp-route-status="all">All books</a>
+      <a class="@(Model.Status == "reading" ? "active" : "")" asp-action="Index" asp-route-query="@Model.Query" asp-route-status="reading">Reading</a>
+      <a class="@(Model.Status == "want" ? "active" : "")" asp-action="Index" asp-route-query="@Model.Query" asp-route-status="want">Want to read</a>
+      <a class="@(Model.Status == "finished" ? "active" : "")" asp-action="Index" asp-route-query="@Model.Query" asp-route-status="finished">Finished</a>
+    </div>
+    <div class="search-controls">
+      <input name="query" value="@Model.Query" maxlength="100" placeholder="Search titles, authors, genres..." aria-label="Search books" />
+      <input type="hidden" name="status" value="@Model.Status" />
+      <button class="button button-search" type="submit">Search ↗</button>
+    </div>
+  </form>
+  @if (Model.Books.Count == 0)
+  {
+    <div class="empty-state">
+      <div class="empty-books" aria-hidden="true">📚</div>
+      <h3>Nothing on this shelf yet.</h3>
+      <p>@(Model.Total == 0 ? "Every library starts with a single story. Add your first book!" : "Try clearing your search or choosing another reading status.")</p>
+      @if (Model.Total == 0)
+      { <a class="button button-dark" asp-action="Create">＋ Add your first book</a> }
+      else
+      { <a class="button button-outline" asp-action="Index">See all books</a> }
+    </div>
+  }
+  else
+  {
+    <div class="book-grid">
+      @foreach (var book in Model.Books)
+      {
+        <article class="book-card">
+          <div class="book-cover">
+            @if (!string.IsNullOrWhiteSpace(book.CoverUrl))
+            {
+              <img src="@book.CoverUrl" alt="Cover of @book.Title" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'" />
+            }
+            <div class="cover-placeholder" aria-hidden="true"><span class="cover-flower">✳</span><span>@book.Title</span><small>@book.Author</small></div>
+          </div>
+          <div class="book-meta">
+            <span class="status-chip status-@book.Status.ToString().ToLowerInvariant()">@statusText(book.Status)</span>
+            <span class="genre">@(!string.IsNullOrWhiteSpace(book.Genre) ? book.Genre : "My library")</span>
+            <h3>@book.Title</h3><p class="author">by @book.Author</p>
+            @if (book.TotalPages is > 0)
+            {
+              <div class="progress-label"><span>Reading progress</span><strong>@book.Progress%</strong></div>
+              <div class="progress"><span style="width:@(book.Progress)%"></span></div>
+              <p class="pages">@book.PagesRead / @book.TotalPages pages</p>
+            }
+            @if (book.Rating is int rating)
+            { <p class="rating" aria-label="Rated @rating out of 5">@(new string('★', rating))@(new string('☆', 5 - rating))</p> }
+            <div class="card-actions"><a asp-action="Edit" asp-route-id="@book.Id">Edit book ↗</a><a class="delete-link" asp-action="Delete" asp-route-id="@book.Id">Remove</a></div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
